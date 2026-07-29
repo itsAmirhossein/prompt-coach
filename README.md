@@ -30,14 +30,14 @@ Note a platform constraint honestly: hooks cannot replace your prompt text. The 
 
 ## Install
 
-From a local checkout:
+In Claude Code:
 
 ```
-/plugin marketplace add /path/to/PromptImprover
+/plugin marketplace add itsAmirhossein/prompt-coach
 /plugin install prompt-coach@prompt-coach
 ```
 
-(Or from git once published: `/plugin marketplace add <repo-url>`.) Restart Claude Code after install. Requires `python3` on PATH (macOS/Linux default).
+(From a local checkout instead: `/plugin marketplace add /path/to/prompt-coach`.) Restart Claude Code after install. Requires `python3` on PATH (macOS/Linux default).
 
 ## Team house rules
 
