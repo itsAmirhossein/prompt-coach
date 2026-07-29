@@ -1,0 +1,16 @@
+{
+  "description": "Prompt Coach always-on gate. No-op unless enabled via /coach on; never blocks a prompt; fires on at most a few prompts per session.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/gate.py",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

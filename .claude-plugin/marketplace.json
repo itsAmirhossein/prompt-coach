@@ -1,0 +1,16 @@
+{
+  "name": "prompt-coach",
+  "description": "Prompt Coach — visible prompt critique, rewrites, and session retrospectives for Claude Code",
+  "owner": {
+    "name": "Amirhossein Jahanshahi",
+    "email": "itsamirhossein13@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "prompt-coach",
+      "description": "Lint and rewrite prompts with explained findings, run outcome-grounded session retrospectives, and optionally gate genuinely broken prompts before they waste a session.",
+      "category": "productivity",
+      "source": "./"
+    }
+  ]
+}

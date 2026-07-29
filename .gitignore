@@ -1,0 +1,9 @@
+# Claude Code local (per-machine permissions/settings — never shared)
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
