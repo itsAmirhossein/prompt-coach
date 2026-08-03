@@ -302,7 +302,7 @@ Review any artifact before committing it to a shared repo.
 - `hooks/gate.py` — the always-on gate (deterministic, fail-open, zero model calls unless stage 2 is on).
 - `tests/` — 34 deterministic gate tests (`python3 tests/test_gate.py`), a 40-case labeled golden set for the rubric, and a planted-defect CLAUDE.md fixture for grading `/audit`.
 
-Design rationale, competitive research, and roadmap: [DESIGN.md](DESIGN.md).
+Design rationale, competitive research, and roadmap: [DESIGN.md](DESIGN.md). Release notes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing
 
