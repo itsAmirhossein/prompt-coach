@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "prompt-coach",
-      "description": "Lint and rewrite prompts with explained findings, run outcome-grounded session retrospectives, and optionally gate genuinely broken prompts before they waste a session.",
+      "description": "Lint and rewrite prompts with explained findings, run outcome-grounded session retrospectives, batch-review a file of prompts or conversations, and optionally gate genuinely broken prompts before they waste a session.",
       "category": "productivity",
       "source": "./",
       "homepage": "https://github.com/itsAmirhossein/prompt-coach"

@@ -1,7 +1,7 @@
 # Prompt Coach
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](.claude-plugin/plugin.json)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8A2BE2.svg)](https://code.claude.com)
 [![Tests](https://img.shields.io/badge/gate%20tests-34%20passing-brightgreen.svg)](tests/)
 
@@ -21,6 +21,7 @@ It reviews your prompts like a linter reviews code: it names what's weak, explai
   - [/retro](#retro)
   - [/templatize](#templatize)
   - [/audit](#audit)
+  - [/batch](#batch)
   - [/coach (always-on gate)](#coach-always-on-gate)
 - [Team house rules](#team-house-rules)
 - [Configuration](#configuration)
@@ -81,6 +82,7 @@ Three things to try in your first 15 minutes:
 | [`/retro`](#retro) | Review a session; keep what you learn |
 | [`/templatize`](#templatize) | Save repeated prompts as fill-in templates |
 | [`/audit`](#audit) | Lint CLAUDE.md and context files |
+| [`/batch`](#batch) | Review many prompts or a file of prompts/conversations at once |
 | [`/coach`](#coach-always-on-gate) | Background gate for broken prompts (off by default) |
 
 ## Commands
@@ -192,6 +194,35 @@ What it finds:
 
 Fixes are proposed as small before/after edits and applied only if you approve them.
 
+### /batch
+
+Reviews more than one thing at a time — a stack of prompts you paste, or a file of prompts or conversations — and ends with what they have in common.
+
+```
+/batch <paste several prompts>       review each, then summarize recurring issues
+/batch --file prompts.md             a file of prompts (blank-line / --- / numbered)
+/batch --file chat-export.jsonl      a conversation transcript or exported chat
+/batch --file notes.md --as prompts  skip detection; force how to segment the file
+```
+
+`/batch` is a dispatcher, not a new reviewer. It works out the structure of what you give it, splits it into items, and hands **each item to the command that already handles it** — a prompt goes to `/improve`, a conversation to `/retro`, a CLAUDE.md-shaped file to `/audit`. Each item's analysis is identical to running that command on it alone.
+
+```mermaid
+flowchart TD
+    IN["Pasted text or a file"] --> S["Determine structure<br/>(prompts · conversations · context file)"]
+    S -- "ambiguous split" --> ASK["❓ Treat as N items or 1?"]
+    ASK --> S
+    S --> R{"Route each item"}
+    R -- "prompt" --> IMP["/improve"]
+    R -- "conversation" --> RET["/retro"]
+    R -- "context file" --> AUD["/audit"]
+    IMP --> SUM["📋 Overall summary:<br/>recurring rule IDs · top 2 patterns · templates & CLAUDE.md lines to keep"]
+    RET --> SUM
+    AUD --> SUM
+```
+
+The one thing `/batch` adds on top of the existing commands is the closing **summary**: the lint rules that fired across several items (with counts, never a score), your top two recurring habits, and the durable artifacts worth extracting — a template for a shape you keep rewriting, CLAUDE.md lines for a constraint you keep restating. Artifacts are written only on your confirmation, and no item's rewrite runs until you pick it.
+
 ### /coach (always-on gate)
 
 An optional background check on every prompt you send. **Off by default.**
@@ -266,6 +297,7 @@ Review any artifact before committing it to a shared repo.
 
 - `skills/prompt-improve/rubric/` — **the product**: the lint catalog (`core.md`), model-era rules pinned to Claude 4.x (`model-claude-4x.md`), and overlays per prompt type (one-shot / agentic / template) and domain (SWE / research / writing). Rules are data, not code.
 - `skills/prompt-retro/`, `skills/prompt-templatize/`, `skills/prompt-audit/` — the command procedures.
+- `skills/prompt-batch/` — the dispatcher for batch and file input: determines structure, routes each item to the capability above, and summarizes across items. Reuses the others; re-implements none of them.
 - `scripts/parse_transcript.py` — read-only transcript parser (prompts, outcomes, token usage).
 - `hooks/gate.py` — the always-on gate (deterministic, fail-open, zero model calls unless stage 2 is on).
 - `tests/` — 34 deterministic gate tests (`python3 tests/test_gate.py`), a 40-case labeled golden set for the rubric, and a planted-defect CLAUDE.md fixture for grading `/audit`.

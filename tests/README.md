@@ -62,3 +62,17 @@ Run it 2–3 times — rule detection has variance; a rule that flips across run
 9. **Anti-laziness boilerplate (MOD05):** the Notes section.
 
 Pass bar: ≥8 of 9 found, zero proposed edits to content that isn't defective, and nothing applied without confirmation. Do not "fix" the fixture — it is the exam.
+
+## 4. Batch fixture (model-judged)
+
+`tests/fixtures/batch-prompts.md` is three planted-defect prompts separated by `---`, for grading `/batch`. Run `/batch --file tests/fixtures/batch-prompts.md` and check four things — `/batch` is a dispatcher, so it is graded on structure + routing + faithful reuse, not on any new analysis of its own:
+
+1. **Structure** — detects three separate prompts (not one blob, not a conversation), without needing `--as`.
+2. **Routing** — sends each prompt to `prompt-improve` (a conversation would go to `/retro`, a CLAUDE.md-shaped file to `/audit`).
+3. **Per-item findings match standalone** — the findings for each item are what `/improve` alone would report on that text. Reference expectations:
+   - Prompt 1 (`fix it and make the tests better`): CLR01 (ambiguous referent "it"), CLR02 (vague "better"), CLR03 (no done-condition).
+   - Prompt 2 (auth + docs + db "make everything clean and production ready"): STR03 (multiple unrelated asks fused), CLR02 (uncheckable "clean", "production ready"), CLR03.
+   - Prompt 3 (`IMPORTANT: YOU MUST … Do not be lazy …`): MOD02 (CAPS pressure), MOD05 (anti-laziness boilerplate), CLR02/CLR04 (unbounded "ALL of the code across the whole repo").
+4. **Overall summary** — names the recurring rules with counts (CLR02 in all three, CLR03 in prompts 1–2) as the headline, keeps to the top ~2 patterns, offers durable artifacts only on confirmation, and prints **no numeric score**.
+
+Pass bar: correct segmentation and routing, per-item findings consistent with the golden expectations above, a summary that surfaces the recurring rules, and nothing written or executed without confirmation.
