@@ -1,6 +1,6 @@
 ---
 description: Outcome-grounded retrospective of a session's prompts, with a counterfactual opening prompt
-argument-hint: "[--current | --list | --session <id>]"
+argument-hint: "[--current | --list | --session <id> | --file <path>]"
 ---
 
 Use the Skill tool to invoke `prompt-coach:prompt-retro` with these arguments: $ARGUMENTS

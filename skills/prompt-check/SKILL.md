@@ -1,11 +1,11 @@
 ---
-name: prompt-batch
-description: Accept batch and file-based input — a single prompt, many prompts, or a file of prompts/conversations (Markdown, TXT, JSONL, exported chats) — determine its structure, route each item to the applicable Prompt Coach capability (improve / retro / templatize / audit) unchanged, then summarize recurring issues across the whole input. Use when the user passes multiple prompts, a file of prompts or conversations, or invokes /batch.
+name: prompt-check
+description: Universal review dispatcher — accept anything (a single prompt, many prompts, or a file of prompts/conversations in Markdown, TXT, JSONL, or exported-chat form), determine its structure, route each item to the applicable Prompt Coach capability (improve / retro / templatize / audit) unchanged, then summarize recurring issues across the whole input. Use when the user passes multiple prompts, a file of prompts or conversations, or invokes /check.
 ---
 
-# Prompt Batch
+# Prompt Check
 
-A dispatcher, not a new analyzer. Batch determines the structure of whatever it is handed, splits it into items, routes each item to the existing capability that fits, and runs *that capability's own procedure, unchanged*. It adds exactly one new thing: a cross-item summary. It never re-implements linting, rewriting, retro, templating, or auditing — it calls them. Any capability added to Prompt Coach later is reachable the same way, with no change here.
+A dispatcher, not a new analyzer. Check determines the structure of whatever it is handed, splits it into items, routes each item to the existing capability that fits, and runs *that capability's own procedure, unchanged*. It adds exactly one new thing: a cross-item summary. It never re-implements linting, rewriting, retro, templating, or auditing — it calls them. Any capability added to Prompt Coach later is reachable the same way, with no change here.
 
 ## Step 0 — Parse arguments
 
@@ -39,11 +39,11 @@ For every item, invoke the matching capability and follow its `SKILL.md` **exact
 | Unit | Capability | How |
 |---|---|---|
 | prompt | `prompt-improve` | Skill `prompt-coach:prompt-improve` with the item text + any `--mode` / `--deep` / `--target` |
-| conversation — Claude Code `.jsonl` | `prompt-retro` | Skill `prompt-coach:prompt-retro` with `--session <path>` (the parser already accepts a file path) |
-| conversation — other export/markdown | `prompt-retro` | Follow prompt-retro's procedure; parse the turns agent-side (its Python parser is Claude-Code-specific), then apply its Steps 2–4 unchanged |
+| conversation in a file (`.jsonl` or text/markdown export) | `prompt-retro` | Skill `prompt-coach:prompt-retro` with `--file <path>` (its Step 1 handles both formats) |
+| conversation pasted as text (no file) | `prompt-retro` | Follow prompt-retro's `--file` procedure on the pasted text (agent-side turn parsing), then its Steps 2–4 unchanged |
 | context-file | `prompt-audit` | Skill `prompt-coach:prompt-audit` with the file path |
 
-A single item → just run that capability and stop; batch adds nothing to one item.
+A single item → just run that capability and stop; the dispatcher adds nothing to one item.
 
 **The only behavioral adaptation for many items:** defer each capability's terminal *choose-a-candidate-and-run* / *apply-this-fix* interaction. The items are artifacts under review, not prompts to execute now — identical to how `/improve --file` reviews a saved prompt without executing it, and how `/retro` reviews many prompts and offers artifacts once at the end. Produce the full analysis for each item (findings, context-to-add, both candidates and the intent check for prompts; the grounded per-prompt review and counterfactual for conversations; the proposed diffs for context files) and collect the offered actions. Present the consolidated choices once, in Step 5. Nothing else about any capability changes.
 
@@ -57,7 +57,7 @@ A single item → just run that capability and stop; batch adds nothing to one i
 
 Only when there are ≥2 items. Synthesize over the *per-item findings* — not the raw content, so nothing is re-analyzed:
 
-- **Recurring issues** — the rule IDs that fired across multiple items, with counts ("CLR03 no done-condition — 6 of 9 prompts; CTX01 unshown referent — 4 of 9"). This is the headline of a batch run.
+- **Recurring issues** — the rule IDs that fired across multiple items, with counts ("CLR03 no done-condition — 6 of 9 prompts; CTX01 unshown referent — 4 of 9"). This is the headline of a multi-item run.
 - **Top 2 patterns** — the two highest-leverage habits, grounded in the per-item evidence, not an inventory (retro's discipline: coaching that lists everything teaches nothing).
 - **Opportunities** — concrete and evidence-backed: a template if one prompt *shape* repeats ≥2× · CLAUDE.md lines for a constraint the items keep restating · a profile update.
 - No numeric scores, ever. A count is evidence; it is not a grade.
@@ -75,6 +75,6 @@ Write or execute only what the user selects. Nothing is written without confirma
 
 ## Hard rules
 
-- Batch never lints, rewrites, retros, templatizes, or audits by itself — it routes to the capability that does. Per-item behavior is identical to standalone; the only difference across many items is deferred, consolidated interaction.
+- Check never lints, rewrites, retros, templatizes, or audits by itself — it routes to the capability that does. Per-item behavior is identical to standalone; the only difference across many items is deferred, consolidated interaction.
 - Determine structure before analyzing; confirm an ambiguous split rather than guessing.
 - No numeric scores. No silent truncation of items. Nothing written or executed without confirmation.

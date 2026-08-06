@@ -1,7 +1,7 @@
 {
   "name": "prompt-coach",
-  "description": "Visible prompt coaching for Claude Code: lint and rewrite prompts with explained findings (/improve), outcome-grounded session retrospectives with a counterfactual opening prompt (/retro), reusable templates (/templatize), CLAUDE.md auditing (/audit), batch and file input that routes many prompts or a conversation file to the applicable capabilities and summarizes recurring issues (/batch), and an optional threshold-gated always-on gate with loop rescue (/coach on). All local, no scores, no silent rewrites.",
-  "version": "0.3.0",
+  "description": "Visible prompt coaching for Claude Code: lint and rewrite prompts with explained findings (/improve), outcome-grounded session retrospectives with a counterfactual opening prompt (/retro), reusable templates (/templatize), CLAUDE.md auditing (/audit), a universal dispatcher that routes any input — one prompt, many, or a file of prompts/conversations — to the applicable capabilities and summarizes recurring issues (/check), and an optional threshold-gated always-on gate with loop rescue (/coach on). All local, no scores, no silent rewrites.",
+  "version": "0.4.0",
   "author": {
     "name": "Amirhossein Jahanshahi",
     "email": "itsamirhossein13@gmail.com"

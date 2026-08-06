@@ -9,11 +9,12 @@ Review a session's prompts and convert what you find into durable artifacts. The
 
 ## Step 1 — Resolve the session
 
-Arguments: `--current` (default) · `--session <id>` · `--list`.
+Arguments: `--current` (default) · `--session <id>` · `--list` · `--file <path>`.
 
 The parser lives at `<plugin_root>/scripts/parse_transcript.py` (plugin root = two directories above this SKILL.md file). All calls need `--cwd "<the session's working directory>"`.
 
 - `--list` → run with `--list`, show sessions (date, prompt count, first prompt), ask which to review.
+- `--file <path>` → a conversation file outside the session store. If it is a Claude Code `.jsonl` transcript, run the parser with `--session <path>` (it accepts absolute paths). Any other format (TXT/Markdown export, rendered terminal log, exported chat) → parse agent-side: read the file, split turns on speaker markers (`User:` / `Assistant:` / `Human:` / `AI:` / `❯` / `●`, or alternating quoted turns), and treat each user turn as a prompt. Judge corrections/rephrases from the visible turns. Token and tool-error totals are not recoverable from a text export — say so in the cost line instead of inventing numbers. Then apply Steps 2–4 unchanged.
 - Otherwise → run with `--current` or `--session <id>`, plus `--max-text 2000`.
 
 If the session has fewer than 3 real prompts, say a retro won't be informative and offer `/improve` on the single prompt instead.

@@ -63,9 +63,9 @@ Run it 2–3 times — rule detection has variance; a rule that flips across run
 
 Pass bar: ≥8 of 9 found, zero proposed edits to content that isn't defective, and nothing applied without confirmation. Do not "fix" the fixture — it is the exam.
 
-## 4. Batch fixture (model-judged)
+## 4. Dispatcher fixture (model-judged)
 
-`tests/fixtures/batch-prompts.md` is three planted-defect prompts separated by `---`, for grading `/batch`. Run `/batch --file tests/fixtures/batch-prompts.md` and check four things — `/batch` is a dispatcher, so it is graded on structure + routing + faithful reuse, not on any new analysis of its own:
+`tests/fixtures/batch-prompts.md` is three planted-defect prompts separated by `---`, for grading `/check` (named `/batch` before v0.4.0). Run `/check --file tests/fixtures/batch-prompts.md` and check four things — `/check` is a dispatcher, so it is graded on structure + routing + faithful reuse, not on any new analysis of its own:
 
 1. **Structure** — detects three separate prompts (not one blob, not a conversation), without needing `--as`.
 2. **Routing** — sends each prompt to `prompt-improve` (a conversation would go to `/retro`, a CLAUDE.md-shaped file to `/audit`).
